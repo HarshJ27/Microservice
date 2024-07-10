@@ -20,7 +20,7 @@ cd <repository_directory>
 
 Running the application:
 1. Start the server: npm start
-2. Access the API documentation: Navigate to [https:///api-docs](https://microservice-pz1w.onrender.com/api-docs/) in your web browser.
+2. Access the API documentation: Navigate to https://microservice-pz1w.onrender.com/api-docs/ in your web browser.
 
 Hosted this app on Render: https://microservice-pz1w.onrender.com
 
