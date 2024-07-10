@@ -7,6 +7,7 @@ import authRoutes from './src/routes/auth.js';
 import notificationRoutes from './src/routes/notification.js';
 import { initializeSocket } from './src/services/socket.js';
 import { Server } from 'socket.io';
+import swaggerConfig from './src/swagger.js';
 
 dotenv.config();
 
@@ -15,6 +16,8 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 app.use(express.json());
+
+swaggerConfig(app);
 
 // Attach io to req
 // app.use((req, res, next) => {
