@@ -1,0 +1,40 @@
+// src/controllers/auth.mjs
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+import Users from '../models/Users.js';
+
+export const register = async (req, res) => {
+  const { userName, email, password, role } = req.body;
+  try {
+    const existUser = await Users.exists({email});
+    if(existUser) {
+        return res.status(401).josn({message: "User already registered with this email id!!!"})
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new Users({ userName, email, password: hashedPassword, role });
+    await user.save();
+    res.status(201).send('User registered');
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+};
+
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await Users.findOne({ email });
+    if (!user) {
+        return res.status(401).json({ message: "Invalid email" });
+      }
+  
+      // Compare the passwords
+      const passwordMatch = await bcrypt.compare(password, user.password);
+      if (!passwordMatch) {
+        return res.status(401).json({ message: "Invalid credentials" });
+      }
+    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.json({ token });
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+};
